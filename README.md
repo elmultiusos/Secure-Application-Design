@@ -157,9 +157,8 @@ Editar `/var/www/html/index.html` y agregar antes de `<script src="app.js">`:
 #### 5. Aplicar la configuración VirtualHost
 
 ```bash
-sudo cp apache-vhost.conf /etc/httpd/conf.d/secureapp.conf
-# Reemplazar "your-domain.duckdns.org" con tu dominio real
-sudo nano /etc/httpd/conf.d/secureapp.conf
+sudo cp apache-vhost.conf /etc/httpd/conf.d/elmultiusos.ducksdns.org.conf
+sudo nano /etc/httpd/conf.d/elmultiusos.ducksdns.org.conf
 sudo systemctl reload httpd
 ```
 
