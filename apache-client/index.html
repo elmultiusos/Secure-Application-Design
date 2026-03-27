@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure App — Acceso Seguro</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: rgba(255,255,255,0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .logo h1 {
+            color: #e2e8f0;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+        .logo p {
+            color: #64b5f6;
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+        .lock-icon {
+            font-size: 2.5rem;
+            display: block;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .tabs {
+            display: flex;
+            background: rgba(255,255,255,0.05);
+            border-radius: 8px;
+            padding: 4px;
+            margin-bottom: 28px;
+        }
+        .tab-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            color: #90a4ae;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.92rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #1565c0;
+            color: #fff;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .form-group {
+            margin-bottom: 18px;
+        }
+        label {
+            display: block;
+            color: #90a4ae;
+            font-size: 0.82rem;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        input {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 8px;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+        input:focus {
+            border-color: #1565c0;
+        }
+        input::placeholder { color: #546e7a; }
+        button[type="submit"] {
+            width: 100%;
+            padding: 13px;
+            background: #1565c0;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 6px;
+        }
+        button[type="submit"]:hover { background: #1976d2; }
+        button[type="submit"]:active { transform: scale(0.98); }
+        button[type="submit"]:disabled { background: #37474f; cursor: not-allowed; }
+        .alert {
+            border-radius: 8px;
+            padding: 12px 16px;
+            font-size: 0.9rem;
+            margin-top: 16px;
+            display: none;
+            line-height: 1.5;
+        }
+        .alert.success {
+            background: rgba(76,175,80,0.15);
+            border: 1px solid rgba(76,175,80,0.4);
+            color: #a5d6a7;
+        }
+        .alert.error {
+            background: rgba(244,67,54,0.15);
+            border: 1px solid rgba(244,67,54,0.4);
+            color: #ef9a9a;
+        }
+        .ssl-badge {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 24px;
+            color: #546e7a;
+            font-size: 0.78rem;
+        }
+        .ssl-badge span { color: #66bb6a; font-weight: 700; }
+        .spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <span class="lock-icon">🔐</span>
+        <h1>Secure Application</h1>
+        <p>Conexión protegida con TLS · Contraseñas cifradas (BCrypt)</p>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('login')">Iniciar Sesión</button>
+        <button class="tab-btn" onclick="switchTab('register')">Registrarse</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div id="tab-login" class="tab-content active">
+        <form id="login-form" onsubmit="handleLogin(event)">
+            <div class="form-group">
+                <label for="login-user">Usuario</label>
+                <input id="login-user" type="text" placeholder="tu_usuario" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="login-pass">Contraseña</label>
+                <input id="login-pass" type="password" placeholder="••••••••" required autocomplete="current-password">
+            </div>
+            <button type="submit" id="login-btn">Iniciar Sesión</button>
+        </form>
+        <div id="login-alert" class="alert"></div>
+    </div>
+
+    <!-- REGISTER -->
+    <div id="tab-register" class="tab-content">
+        <form id="register-form" onsubmit="handleRegister(event)">
+            <div class="form-group">
+                <label for="reg-user">Usuario</label>
+                <input id="reg-user" type="text" placeholder="nuevo_usuario" required autocomplete="username">
+            </div>
+            <div class="form-group">
+                <label for="reg-pass">Contraseña</label>
+                <input id="reg-pass" type="password" placeholder="mínimo 6 caracteres" required autocomplete="new-password" minlength="6">
+            </div>
+            <button type="submit" id="reg-btn">Crear Cuenta</button>
+        </form>
+        <div id="reg-alert" class="alert"></div>
+    </div>
+
+    <div class="ssl-badge">
+        🔒 <span>HTTPS</span> · Apache (Server 1) → Spring Boot (Server 2)
+    </div>
+</div>
+
+<script>window.API_URL = "https://elmultiusos2.duckdns.org:8443";</script>
+<script src="app.js"></script>
+</body>
+</html>

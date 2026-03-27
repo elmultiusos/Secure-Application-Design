@@ -93,13 +93,13 @@ curl -k https://tu-servidor-spring:8443/api/hello \
 
 ## Variables de Entorno
 
-| Variable            | Valor por defecto                    | Descripción                                    |
-| ------------------- | ------------------------------------ | ---------------------------------------------- |
-| `PORT`              | `8443`                               | Puerto de escucha de Spring Boot               |
-| `KEYSTORE_PATH`     | `classpath:keystore/ecikeystore.p12` | Ruta al keystore PKCS12                        |
-| `KEYSTORE_PASSWORD` | `123456`                             | Contraseña del keystore                        |
-| `KEY_ALIAS`         | `ecikeypair`                         | Alias de la llave dentro del keystore          |
-| `ALLOWED_ORIGIN`    | `https://localhost`                  | Origen(es) CORS permitidos, separados por coma |
+| Variable            | Valor por defecto                   | Descripción                                    |
+| ------------------- | ----------------------------------- | ---------------------------------------------- |
+| `PORT`              | `8443`                              | Puerto de escucha de Spring Boot               |
+| `KEYSTORE_PATH`     | `classpath:keystore/ecikeypair.p12` | Ruta al keystore PKCS12                        |
+| `KEYSTORE_PASSWORD` | `123456`                            | Contraseña del keystore                        |
+| `KEY_ALIAS`         | `ecikeypair`                        | Alias de la llave dentro del keystore          |
+| `ALLOWED_ORIGIN`    | `https://localhost`                 | Origen(es) CORS permitidos, separados por coma |
 
 > **Principio 12-factor (Factor III — Configuración):** Ningún secreto está en el código. Todo se pasa mediante variables de entorno antes de iniciar la aplicación.
 
@@ -150,7 +150,7 @@ Editar `/var/www/html/index.html` y agregar antes de `<script src="app.js">`:
 
 ```html
 <script>
-  window.API_URL = "https://elmultiusos.duckdns.org:8443";
+  window.API_URL = "https://elmultiusos2.duckdns.org:8443";
 </script>
 ```
 
@@ -218,7 +218,7 @@ keytool -genkeypair \
   -alias ecikeypair \
   -keyalg RSA -keysize 2048 \
   -storetype PKCS12 \
-  -keystore demo/src/main/resources/keystore/ecikeystore.p12 \
+  -keystore demo/src/main/resources/keystore/ecikeypair.p12 \
   -validity 3650 \
   -dname "CN=localhost, OU=Dev, O=SecureApp, L=Bogota, S=Cundinamarca, C=CO" \
   -storepass 123456
@@ -276,11 +276,15 @@ Separar el frontend estático (Apache) de la API (Spring Boot) aplica:
 
 ![alt text](image.png)
 
-2. Registro exitoso de usuario
-3. Login exitoso con respuesta 200
-4. Respuesta 401 con credenciales incorrectas
-5. `GET /api/hello` retornando 200 con credenciales HTTP Basic
-6. Consola de AWS EC2 con ambas instancias ejecutándose
+2. DuckDNS
+
+![alt text](image-1.png)
+
+3. Registro exitoso de usuario
+4. Login exitoso con respuesta 200
+5. Respuesta 401 con credenciales incorrectas
+6. `GET /api/hello` retornando 200 con credenciales HTTP Basic
+7. Consola de AWS EC2 con ambas instancias ejecutándose
 
 ---
 
