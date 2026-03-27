@@ -193,19 +193,7 @@ sudo openssl pkcs12 -export \
 
 Se genero el .JAR con mvn clean package -DskipTests 2>&1 | Select-Object -Last 40
 
-```bash
-# Desde tu máquina local:
-scp -i Apache.pem demo/target/demo-0.0.1-SNAPSHOT.jar ec2-3-87-218-39.compute-1.amazonaws.com:/home/ec2-user/
-
-# En el servidor Spring:
-export PORT=8443
-export KEYSTORE_PATH=/home/ec2-user/keystore.p12
-export KEYSTORE_PASSWORD=tu-contrasena-keystore
-export KEY_ALIAS=springalias
-export ALLOWED_ORIGIN=https://elmultiusos.duckdns.org
-
-java -jar /home/ec2-user/demo-0.0.1-SNAPSHOT.jar
-```
+![alt text](image-2.png)
 
 ---
 
@@ -223,21 +211,6 @@ keytool -genkeypair \
   -dname "CN=localhost, OU=Dev, O=SecureApp, L=Bogota, S=Cundinamarca, C=CO" \
   -storepass 123456
 ```
-
-#### Iniciar el servidor Spring Boot
-
-```bash
-cd demo
-mvn spring-boot:run
-# API disponible en https://localhost:8443
-```
-
-#### Abrir el frontend
-
-Abrir `apache-client/index.html` directamente en el navegador.
-El navegador mostrará una advertencia por el certificado autofirmado — aceptarla para continuar las pruebas.
-
-> La variable `window.API_URL` apunta a `https://localhost:8443` por defecto, así que funciona sin cambios adicionales en local.
 
 ---
 
@@ -280,13 +253,13 @@ Separar el frontend estático (Apache) de la API (Spring Boot) aplica:
 
 ![alt text](image-1.png)
 
-3. Registro exitoso de usuario
-4. Login exitoso con respuesta 200
-5. Respuesta 401 con credenciales incorrectas
-6. `GET /api/hello` retornando 200 con credenciales HTTP Basic
-7. Consola de AWS EC2 con ambas instancias ejecutándose
+3. `GET /api/auth/status`
 
----
+![alt text](image-3.png)
+
+4. Consola de AWS EC2 con ambas instancias ejecutándose
+
+## ![alt text](image-4.png)
 
 ## Autor
 
