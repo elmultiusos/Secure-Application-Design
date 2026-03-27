@@ -212,6 +212,21 @@ keytool -genkeypair \
   -storepass 123456
 ```
 
+#### Iniciar el servidor Spring Boot
+
+```bash
+cd demo
+mvn spring-boot:run
+# API disponible en https://localhost:8443
+```
+
+#### Abrir el frontend
+
+Abrir `apache-client/index.html` directamente en el navegador.
+El navegador mostrará una advertencia por el certificado autofirmado — aceptarla para continuar las pruebas.
+
+> La variable `window.API_URL` apunta a `https://localhost:8443` por defecto, así que funciona sin cambios adicionales en local.
+
 ---
 
 ## Notas de Diseño de Seguridad
