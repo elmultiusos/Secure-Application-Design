@@ -191,10 +191,11 @@ sudo openssl pkcs12 -export \
 
 #### 3. Subir y ejecutar el JAR
 
+Se genero el .JAR con mvn clean package -DskipTests 2>&1 | Select-Object -Last 40
+
 ```bash
 # Desde tu máquina local:
-scp -i tu-llave.pem demo/target/demo-0.0.1-SNAPSHOT.jar \
-    ec2-user@tu-servidor-spring:/home/ec2-user/
+scp -i Apache.pem demo/target/demo-0.0.1-SNAPSHOT.jar ec2-3-87-218-39.compute-1.amazonaws.com:/home/ec2-user/
 
 # En el servidor Spring:
 export PORT=8443

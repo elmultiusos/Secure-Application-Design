@@ -20,7 +20,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${ALLOWED_ORIGIN:https://localhost}")
+    @Value("${app.allowed-origin:https://localhost}")
     private String allowedOrigins;
 
     @Bean
