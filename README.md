@@ -111,7 +111,7 @@ curl -k https://tu-servidor-spring:8443/api/hello \
 
 - Dos instancias EC2 (Amazon Linux 2023), ambas con puertos 80 y 443 abiertos en los Security Groups.
 - El Servidor 2 adicionalmente necesita el puerto 8443 abierto.
-- Un nombre de dominio apuntando a cada instancia (por ejemplo, DuckDNS en `duckdns.org`).
+- Un nombre de dominio apuntando a cada instancia Apache -> https://elmultiusos.duckdns.org/ y Spring -> https://elmultiusos2.duckdns.org/.
 - Java 17 instalado en el Servidor 2.
 
 ---
@@ -132,7 +132,7 @@ sudo dnf install -y python3-certbot-apache
 #### 2. Obtener certificado Let's Encrypt
 
 ```bash
-sudo certbot --apache -d tu-dominio.duckdns.org
+sudo certbot --apache -d elmultiusos.duckdns.org
 ```
 
 Certbot edita automáticamente la configuración de Apache y programa la renovación del certificado.
@@ -150,7 +150,7 @@ Editar `/var/www/html/index.html` y agregar antes de `<script src="app.js">`:
 
 ```html
 <script>
-  window.API_URL = "https://tu-servidor-spring.duckdns.org:8443";
+  window.API_URL = "https://elmultiusos.duckdns.org:8443";
 </script>
 ```
 
@@ -179,12 +179,12 @@ java -version
 ```bash
 # Instalar Certbot en modo standalone
 sudo dnf install -y python3-certbot
-sudo certbot certonly --standalone -d tu-servidor-spring.duckdns.org
+sudo certbot certonly --standalone -d elmultiusos2.duckdns.org
 
 # Convertir certificados PEM a keystore PKCS12
 sudo openssl pkcs12 -export \
-  -in    /etc/letsencrypt/live/tu-servidor-spring.duckdns.org/fullchain.pem \
-  -inkey /etc/letsencrypt/live/tu-servidor-spring.duckdns.org/privkey.pem \
+  -in    /etc/letsencrypt/live/elmultiusos2.duckdns.org/fullchain.pem \
+  -inkey /etc/letsencrypt/live/elmultiusos2.duckdns.org/privkey.pem \
   -out   /home/ec2-user/keystore.p12 \
   -name  springalias \
   -passout pass:tu-contrasena-keystore
@@ -202,35 +202,9 @@ export PORT=8443
 export KEYSTORE_PATH=/home/ec2-user/keystore.p12
 export KEYSTORE_PASSWORD=tu-contrasena-keystore
 export KEY_ALIAS=springalias
-export ALLOWED_ORIGIN=https://tu-dominio-apache.duckdns.org
+export ALLOWED_ORIGIN=https://elmultiusos.duckdns.org
 
 java -jar /home/ec2-user/demo-0.0.1-SNAPSHOT.jar
-```
-
-#### 4. Ejecutar como servicio systemd (recomendado)
-
-```bash
-sudo tee /etc/systemd/system/secureapp.service << 'EOF'
-[Unit]
-Description=Secure Application Spring Boot
-After=network.target
-
-[Service]
-User=ec2-user
-WorkingDirectory=/home/ec2-user
-Environment="PORT=8443"
-Environment="KEYSTORE_PATH=/home/ec2-user/keystore.p12"
-Environment="KEYSTORE_PASSWORD=tu-contrasena-keystore"
-Environment="KEY_ALIAS=springalias"
-Environment="ALLOWED_ORIGIN=https://tu-dominio-apache.duckdns.org"
-ExecStart=/usr/bin/java -jar /home/ec2-user/demo-0.0.1-SNAPSHOT.jar
-Restart=on-failure
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-sudo systemctl enable --now secureapp
 ```
 
 ---
